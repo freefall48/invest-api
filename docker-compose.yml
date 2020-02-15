@@ -1,0 +1,58 @@
+version: '3.7'
+services:
+  redis:
+    image: redis:alpine
+    hostname: redis
+    volumes:
+      - redis-data:/data
+    networks:
+      - redis-net
+    ports:
+      - 6379:6379
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg11
+    environment:
+      POSTGRES_PASSWORD: 'password'
+    volumes:
+      - timescaledb-data:/var/lib/postgresql/data
+    networks:
+      - timescaledb-net
+    ports:
+      - '5432:5432'
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    networks:
+      - timescaledb-net
+    ports:
+      - 8080:8080
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'development@dev'
+      PGADMIN_DEFAULT_PASSWORD: 'password'
+      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: 'True'
+      PGADMIN_LISTEN_PORT: '8080'
+
+  browserless:
+    image: browserless/chrome:latest
+    ports:
+      - 3000:3000
+    networks:
+      - browserless-net
+    environment:
+      MAX_QUEUE_LENGTH: '0'
+      PREBOOT_CHROME: 'True'
+      TOKEN: 'PASSWORD'
+      ENABLE_DEBUGGER: 'False'
+      CONNECTION_TIMEOUT: '300000'
+volumes:
+  redis-data:
+  timescaledb-data:
+  pgadmin-data:
+
+networks:
+  redis-net:
+  timescaledb-net:
+  browserless-net:

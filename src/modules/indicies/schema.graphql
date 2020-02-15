@@ -1,0 +1,14 @@
+type Query {
+
+}
+
+type Mutation {
+    updateIndicies(): Boolean
+}
+
+type Index {
+    id: ID!
+    code: String!
+    company: String
+    price: float
+}

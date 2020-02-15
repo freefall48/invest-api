@@ -6,13 +6,20 @@
     "lib": ["es6", "esnext", "es2015"],
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": true,
+    "allowJs": true,
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "emitDecoratorMetadata": true,
+    "declaration": true,
     "sourceMap": true,
+    "noEmit": true,
     "typeRoots": ["node_modules/@types", "src/@types"],
     "baseUrl": "src",
     "paths": {
-      "@modules/*": ["modules/*"]
+      "@modules/*": ["modules/*"],
+      "@tasks/*": ["tasks/*"],
+      "@entities": ["models"],
+      "@configs": ["config"]
     }
   },
   "include": ["src/**/*"],

@@ -1,14 +1,13 @@
+import { UserProvider } from './user.provider';
+
 export default {
   Query: {
-    user: (root, { id }) => {
-      return {
-        _id: id,
-        username: 'jhon',
-      };
+    user: (root, { id }, { injector }): Function => {
+      return injector.get(UserProvider).getUserById(id);
     },
   },
   User: {
-    id: user => user._id,
-    username: user => user.username,
+    id: (user: { _id: string }): string => user._id,
+    username: (user: { username: string }): string => user.username,
   },
 };
