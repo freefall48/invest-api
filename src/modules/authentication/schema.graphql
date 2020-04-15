@@ -1,0 +1,28 @@
+interface Error {
+    message: String!
+}
+
+type InputInvalidError implements Error {
+    message: String!
+}
+
+input AuthenticationInput {
+    email: String!
+    password: String!
+}
+
+input RefreshInput {
+    rt: String!
+}
+
+type Authentication {
+    token: String!
+    rt: String!
+}
+
+union AuthenticationResult = Authentication | InputInvalidError
+
+type Mutation {
+    authenticate(input: AuthenticationInput!): AuthenticationResult!
+    refresh(input: RefreshInput): AuthenticationResult!
+}
