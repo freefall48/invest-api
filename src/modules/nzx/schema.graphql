@@ -1,0 +1,29 @@
+interface Error {
+    message: String!
+}
+
+type Price {
+    timestamp: Date!
+    code: String!
+    avg: Float!
+    max: Float!
+    min: Float!
+}
+
+type DailyPrices {
+    prices: [Price]!
+}
+
+input PriceTodayInput {
+    codes: [String]!
+}
+
+type PriceError implements Error {
+    message: String!
+}
+
+union DailyPricesResult = DailyPrices | PriceError
+
+type Query {
+    priceToday(input: PriceTodayInput!): DailyPricesResult!
+}

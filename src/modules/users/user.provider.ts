@@ -3,51 +3,49 @@ import {DatabaseProvider} from "@modules/database/database.provider";
 import {ModuleSessionInfo} from "@graphql-modules/core";
 import SQL from "sql-template-strings";
 import {UserEntity} from "@modules/users/user.model";
-
+import { AuthenticationError, ApolloError } from 'apollo-server';
+import jwt from "jsonwebtoken";
 
 @Injectable({
-    scope: ProviderScope.Session
+  scope: ProviderScope.Session
 })
 export class UserProvider {
-    private readonly currentUserId: string;
+  private readonly currentUserId: string;
 
-    constructor(
-        private databaseProvider: DatabaseProvider,
-        private moduleSessionInfo: ModuleSessionInfo
-    ) {
-        const token = this.moduleSessionInfo.session.req.headers.authorization;
-        if (token) {
-            this.currentUserId = "1";
+  constructor(
+    private databaseProvider: DatabaseProvider,
+    private moduleSessionInfo: ModuleSessionInfo
+  ) {
+    if (this.moduleSessionInfo.session.req.headers.authorization) {
+      const token = this.moduleSessionInfo.session.req.headers.authorization.split(" ");
+      if (token[1]) {
+        try {
+          const decoded = jwt.verify(token[1], process.env.JWT_KEY);
+          this.currentUserId = decoded.id;
+        } catch {
+          this.currentUserId = null;
         }
+      }
     }
+  }
 
-    async getCurrentUser() {
-        const {rows} = await this.databaseProvider.query<UserEntity>(
-            SQL`SELECT * FROM users.users WHERE id = ${this.currentUserId}`
-        );
-        if (rows[0]) {
-            return {
-                __typename: "User",
-                ...rows[0]
-            };
-        }
-        return {
-            __typename: "UserNotFoundError",
-            message: "There is no current user associated with this session."
-        }
+  async getCurrentUser() {
+    if (this.currentUserId == null) {
+      throw new AuthenticationError("Current session has no valid user id");
     }
-
-    // async createNewUser(name: string, email: string, ...someOtherThings) {
-    //     try {
-    //         await this.databaseProvider.query(SQL`BEGIN`);
-    //
-    //
-    //         // Other processes in a single transaction that uses the same client for all sessions
-    //
-    //         await this.databaseProvider.query(SQL`COMMIT`);
-    //     } catch (e) {
-    //         await this.databaseProvider.query(SQL`ROLLBACK`);
-    //         throw e;
-    //     }
-    // }
+    const {rows} = await this.databaseProvider.query<UserEntity>(
+      SQL`SELECT * FROM users.users WHERE id = ${this.currentUserId}`
+    );
+    if (rows[0]) {
+      return {
+        __typename: "User",
+        ...rows[0]
+      };
+    } else {
+      return {
+        __typename: "UserNotFoundError",
+        message: "No user was found or no id was provided"
+      }
+    }
+  }
 }

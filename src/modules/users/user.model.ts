@@ -3,5 +3,5 @@ export interface UserEntity {
     firstName: string;
     lastName: string;
     email: string;
-    passwdHash: string;
+    passwordHash: string;
 }

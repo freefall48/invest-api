@@ -27,7 +27,7 @@ export class AuthenticationProvider {
             }
         }
         /* There is a user with that email so check the password */
-        const match = await bcrypt.compare(password, user.passwdHash);
+        const match = await bcrypt.compare(password, user.passwordHash);
         if (!match) {
             /* The password did not match */
             return {
@@ -36,29 +36,10 @@ export class AuthenticationProvider {
             }
         }
         /* The password matched */
-        const token = await jwt.sign({id: user.id}, process.env.JWT_KEY, {expiresIn: '10m'});
-        const rt = await jwt.sign({id: user.id}, process.env.RT_KEY, {expiresIn: '30d', algorithm: "HS384"});
+        const token = await jwt.sign({id: user.id}, process.env.JWT_KEY);
         return {
             __typename: "Authentication",
-            token: token,
-            rt: rt
-        }
-    }
-
-    async refreshToken(rt: String) {
-        try {
-            const decoded = jwt.verify(rt, process.env.RT_KEY, {algorithm: "HS384"});
-            const token = await jwt.sign({id: decoded.id}, process.env.JWT_KEY, {expiresIn: '10m'});
-            return {
-                __typename: "Authentication",
-                token: token,
-                rt: rt
-            }
-        }catch (err) {
-            return {
-                __typename: "InputInvalidError",
-                message: "Invalid refresh token provided."
-            }
+            token: token
         }
     }
 }

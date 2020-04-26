@@ -11,18 +11,12 @@ input AuthenticationInput {
     password: String!
 }
 
-input RefreshInput {
-    rt: String!
-}
-
 type Authentication {
     token: String!
-    rt: String!
 }
 
 union AuthenticationResult = Authentication | InputInvalidError
 
 type Mutation {
     authenticate(input: AuthenticationInput!): AuthenticationResult!
-    refresh(input: RefreshInput): AuthenticationResult!
 }

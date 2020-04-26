@@ -4,22 +4,21 @@
     "experimentalDecorators": true,
     "module": "commonjs",
     "target": "es6",
-    "lib": ["es6", "esnext", "es2015"],
+    "lib": ["es6", "esnext", "es2015", "dom"],
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": true,
-    "allowJs": true,
+    "allowJs": false,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "declaration": true,
     "sourceMap": true,
     "baseUrl": "src",
+    "rootDir": "src",
     "paths": {
       "@modules/*": ["modules/*"],
       "@tasks/*": ["tasks/*"]
     }
   },
-  "include": ["src/**/*.ts"],
-  "files": ["src/server.ts"],
   "exclude": ["node_modules"]
 }

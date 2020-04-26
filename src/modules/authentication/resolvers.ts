@@ -3,9 +3,6 @@ import {AuthenticationProvider} from "@modules/authentication/authentication.pro
 export default {
     Mutation: {
         authenticate: (root, {input: {email, password}}, {injector}) =>
-            injector.get(AuthenticationProvider).authenticateUser(email, password),
-
-        refresh: (root, {input: {rt}}, {injector}) =>
-            injector.get(AuthenticationProvider).refreshToken(rt)
+            injector.get(AuthenticationProvider).authenticateUser(email, password)
     }
 }
