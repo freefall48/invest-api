@@ -13,6 +13,7 @@
     "emitDecoratorMetadata": true,
     "declaration": true,
     "sourceMap": true,
+    "outDir": "build",
     "baseUrl": "src",
     "rootDir": "src",
     "paths": {
