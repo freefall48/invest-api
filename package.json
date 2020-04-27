@@ -8,7 +8,7 @@
   },
   "main": "src/server.ts",
   "scripts": {
-    "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/server.ts",
+    "start": "nodemon --exec ts-node -r tsconfig-paths/register src/server.ts",
     "debug": "nodemon --exec ts-node -r tsconfig-paths/register --debug-brk src/server.ts",
     "build": "tsc"
   },
